@@ -13,8 +13,8 @@ k = 9e+9
 Q = 7e-2
 q = 1e-3
 m = 1e-3
-V0 = 10
-dt = 5e-6
+V0 = 1
+dt = 5e-12
 
 angle=45
 alpha = angle * math.pi / 180
@@ -23,12 +23,9 @@ y=3
 t=0
 Vx = V0*math.cos(alpha)
 Vy = V0*math.sin(alpha)
-Vx1=Vx
-Vy1=Vy
 
-
-while x>-68:
-    r = math.sqrt(x ** 2 + y ** 2)
+for i in range(100):
+    r = math.sqrt(x ** 2 + y ** 2) /100
     beta = math.atan2(abs(y),abs(x))
     if (x<0 and y>0):
         beta = math.pi - beta
@@ -38,11 +35,11 @@ while x>-68:
         beta = -beta
     Ax = k * Q * q / r**2 / m * math.cos(beta)
     Ay = k * Q * q / r**2 / m * math.sin(beta)
-    Vx += Ax*dt + Vx1 * dt
-    Vy += Ay*dt + Vy1 * dt
-    x += Vx*dt + Ax*dt**2/2
-    y += Vy*dt + Ay*dt**2/2
-    print(Ax, Ay, Vx, Vy, x, y, beta*180/math.pi)
+    Vx += Ax*dt
+    Vy += Ay*dt
+    x += (Vx*dt + Ax*dt**2/2)*100
+    y += (Vy*dt + Ay*dt**2/2)*100
+    print(Ax, Ay, Vx, Vy, x, y, r, beta*180/math.pi)
     plt.scatter([x], [y], s=1, c='red')
 plt.show()
 
