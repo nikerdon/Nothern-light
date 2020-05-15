@@ -24,8 +24,8 @@ t=0
 Vx = V0*math.cos(alpha)
 Vy = V0*math.sin(alpha)
 
-for i in range(100):
-    r = math.sqrt(x ** 2 + y ** 2) /100
+for i in range(1000):
+    r = math.sqrt(x ** 2 + y ** 2) / 100
     beta = math.atan2(abs(y),abs(x))
     if (x<0 and y>0):
         beta = math.pi - beta
@@ -39,7 +39,7 @@ for i in range(100):
     Vy += Ay*dt
     x += (Vx*dt + Ax*dt**2/2)*100
     y += (Vy*dt + Ay*dt**2/2)*100
-    print(Ax, Ay, Vx, Vy, x, y, r, beta*180/math.pi)
+    #print(Ax, Ay, Vx, Vy, x, y, r, beta*180/math.pi)
     plt.scatter([x], [y], s=1, c='red')
 plt.show()
 
