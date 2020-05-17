@@ -1,6 +1,6 @@
 import math
 import matplotlib.pyplot as plt
-
+#проект по физике проверка раз два три
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.set_xlabel('x')
