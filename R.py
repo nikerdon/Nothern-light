@@ -2,10 +2,10 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-q = 1.6e-19
-m = 9.1e-31
+q = 1
+m = 0.0000005
 V0 = 200
-dt = 2
+dt = 1
 Rz = 6370
 
 fig = plt.figure()
@@ -23,8 +23,8 @@ ax.set_zlabel('z')
 # z1 = r*cos(phi1)
 # ax.plot_surface(x1, y1, z1,  rstride=1, cstride=1, color='blue', alpha=0.6, linewidth=0)
 
-n=1
-UT=10.6
+n = 1
+UT = 10.6
 npr = 5 * 1e6
 na = 2.5 * 1e5
 dalpha1 = 11
@@ -38,26 +38,27 @@ psi = math.asin(-math.sin(beta) * math.cos(alpha1) + math.cos(beta) * math.sin(a
 si=math.sin(psi)
 co=math.cos(psi)
 
-x = -0.529*Rz * 1000
-#x = Rz * 10 * 1000
-y = 0.608*Rz * 1000
-z = 1.833*Rz * 1000
-Vx = -1000
+x = 2*Rz *1000
+y= 0.9*Rz *1000
+z= Rz *1000
+
+Vx = -100
 Vy = 0
 Vz = 0
 ax.scatter([x/1000], [y/1000], [z/1000], c='green', s=300)
 
-for i in range(1000):
+for i in range(30000):
     r = math.sqrt(x**2+y**2+z**2)
     V = math.sqrt(Vx**2+Vy**2+Vz**2)
 
     r1 = 10000 * math.pow(npr+4*na,-1/6)*math.pow(V,-1/3)*Rz*1000
-    B1X = (8.5*si - 39.6*si*co*x/r1 + 1.2*si*y/r1 + (21.8 * co**2 - 17.9 * si**2)*z/r1 + psi/10*180/math.pi*(2.9*co + (-3*co**2+5.5*si**2)*x/r1 + 0.2*co*y/r1 - 8.5*si*co*z/r1))*(1e-9)
-    B1Y = (180/math.pi*psi/10*(-0.2*co*x/r1 -2.5 * y/r1 - 0.2 * si * z/r1))*(1e-9)
-    B1Z = (-8.5*co + (-21.8*si**2+17.9*co**2)*x/r1 - 1.2*co*y/r1 + 39.6 * si * co * z/r1 + psi/10*180/math.pi*(2.9*si-8.5*si*co*x/r1 + 0.2*si*y/r1 + (-3*si**2+5.5*co**2)*z/r1))*(1e-9)
+    B1X = (8.5*si - 39.6*si*co*x/r1 + 1.2*si*y/r1 + (21.8*co**2-17.9*si**2)*z/r1 + psi/10*180/math.pi*(2.9*co + (-3*co**2+5.5*si**2)*x/r1 + 0.2*co*y/r1 - 8.5*si*co*z/r1))*(1e-9)
+    B1Y = (180/math.pi*psi/10*(-0.2*co*x/r1 -2.5 * y/r1 - 0.2*si*z/r1))*(1e-9)
+    B1Z = (-8.5*co + (-21.8*si**2+17.9*co**2)*x/r1 - 1.2*co*y/r1 + 39.6*si*co*z/r1 + psi/10*180/math.pi*(2.9*si-8.5*si*co*x/r1 + 0.2*si*y/r1 + (-3*si**2+5.5*co**2)*z/r1))*(1e-9)
     B1 = math.sqrt(B1X**2+B1Y**2+B1Z**2)
 
     B = 4/3 * 2*math.pi/4 * 4 * 1e-7 * r * (-1.15*(1e-9)) * 2 *math.pi/24/3600
+
     gamma = math.acos(z/r)
     theta = math.acos(x/r)
     BX = B * math.sin(gamma) * math.cos(theta)
@@ -69,17 +70,20 @@ for i in range(1000):
     bz = B1Z + BZ
     bo = math.sqrt(bx**2+by**2+bz**2)
 
-    Ax = (q) * V * bo * (Vy*bz - Vz*by) / m
-    Ay = (q) * V * bo * (Vz*bx - Vx*bz) / m
-    Az = (q) * V * bo * (Vx*by - Vy*bx) / m
+    Ax = q * (Vy*bz - Vz*by) / m
+    Ay = q * (Vz*bx - Vx*bz) / m
+    Az = q * (Vx*by - Vy*bx) / m
     Vx += Ax*dt
     Vy += Ay*dt
     Vz += Az*dt
     x += Vx * dt + Ax*dt**2/2
     y += Vy * dt + Ay*dt**2/2
     z += Vz * dt + Az*dt**2/2
-    print(round(bx*10**12),round(by*10**12),round(bz*10**12),round(Vx),round(Vy),round(Vz),round(x/1000),round(y/1000),round(z/1000))
-    ax.scatter([x / 1000], [y / 1000], [z / 1000], c='red', s=0.3)
+    #print(n,r1,x,y,z)
+    #print(n, round(B1X*10**12), round(B1Y*10**12), round(B1Z*10**12),'||', round(Ax), round(Ay), round(Az), '||',round(Vx), round(Vy), round(Vz), '||',round(x/1000), round(y/1000), round(z/1000))
+    n+=1
+    if n%10==0:
+        ax.scatter([x / 1000], [y / 1000], [z / 1000], c='red', s=0.3)
 plt.show()
 
 # theta = math.acos(abs(Vx*x+Vy*y+Vz*z)/(V*r))
