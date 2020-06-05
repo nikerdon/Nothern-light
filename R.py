@@ -3,10 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 k = 9e+9
-q = 1
-Q = -7e-2
-m = 0.0000005
-dt = 1
+q = 3.2*10**(-19)
+m = 6.6*10**(-27)
+dt = 0.1
 Rz = 6370
 
 fig = plt.figure()
@@ -37,19 +36,20 @@ alpha2 = dalpha2 * math.pi / 180
 beta = math.pi/180 * (23.5*math.sin(360/365*(284+n)/180*math.pi))
 phi = (15*UT-69)*math.pi/180
 psi = math.asin(-math.sin(beta) * math.cos(alpha1) + math.cos(beta) * math.sin(alpha1) * math.cos(phi))
-si=math.sin(psi)
-co=math.cos(psi)
+si = math.sin(psi)
+co = math.cos(psi)
 
-x =Rz * 1000 *5
-y= Rz * 1000 *0
-z= Rz * 1000 *1
+x = Rz * 1000 * 0
+y = Rz * 1000 * 0
+z = Rz * 1000 * 2
 
-Vx = -100000
-Vy = 0
-Vz = 0
+Vx = -500
+Vy = -100
+Vz = -100000
 ax.text2D(0.03, 0.83, str(q)+' Кл'+'\n'+str(m)+' кг'+'\n'+'Vx = '+str(Vx)+' м/с \n'+'Vy = '+str(Vy)+' м/с \n'+'Vz = '+str(Vz)+' м/с \n', transform=ax.transAxes)
 ax.text2D(0.88, 0.86, 'x0 = '+ str(x/1000)+' км \n'+'y0 = '+str(y/1000)+' км \n'+'z0 = '+str(z/1000)+' км \n', transform=ax.transAxes)
 ax.scatter([x/1000], [y/1000], [z/1000], c='green', s=100)
+n = 1
 
 for i in range(1000):
     r = math.sqrt(x**2+y**2+z**2)
@@ -78,9 +78,11 @@ for i in range(1000):
     alpha1 = math.atan2(y, x)
     beta1 = math.acos(z/r)
 
-    Ax = q * (Vy*bz - Vz*by) / m + k * Q * q / r ** 2 / m * math.cos(alpha1)*math.sin(beta1)
-    Ay = q * (Vz*bx - Vx*bz) / m + k * Q * q / r ** 2 / m * math.sin(alpha1)*math.sin(beta1)
-    Az = q * (Vx*by - Vy*bx) / m + k * Q * q / r ** 2 / m * math.cos(beta1)
+    E = 93.8 * math.exp(-4.53*(r-Rz)/1000) + 44.4 * math.exp(-0.38*(r-Rz)/1000) + 11.8 * math.exp(-0.12*(r-Rz)/1000)
+
+    Ax = q * (Vy*bz - Vz*by) / m + q * E / m * math.cos(alpha1)*math.sin(beta1)
+    Ay = q * (Vz*bx - Vx*bz) / m + q * E / m * math.sin(alpha1)*math.sin(beta1)
+    Az = q * (Vx*by - Vy*bx) / m + q * E / m * math.cos(beta1)
 
     Vx += Ax*dt
     Vy += Ay*dt
@@ -91,12 +93,12 @@ for i in range(1000):
     print(n)
     if r <= Rz*1000:
         ax.scatter([x/1000], [y/1000], [z/1000], c='magenta', s=100)
-        print(x/1000,y/1000,z/1000)
+        print(x/1000, y/1000, z/1000)
         break
     #print(n,r1,x,y,z)
     #print(n, round(B1X*10**12), round(B1Y*10**12), round(B1Z*10**12),'||', round(Ax), round(Ay), round(Az), '||',round(Vx), round(Vy), round(Vz), '||',round(x/1000), round(y/1000), round(z/1000))
-    n+=1
-    if n%10==0:
+    n += 1
+    if n % 10 == 0:
         ax.scatter([x / 1000], [y / 1000], [z / 1000], c='red', s=0.2)
 # for angle in range(0, 360):
 #    ax.view_init(30, angle)
