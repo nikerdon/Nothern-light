@@ -1,6 +1,8 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
 
 k = 9e+9
 q = 3.2*10**(-19)
